@@ -1,0 +1,9 @@
+{
+  "name": "bobo",
+  "version": "1.0.0",
+  "main": "server.js",
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^6.2.1"
+  }
+}
