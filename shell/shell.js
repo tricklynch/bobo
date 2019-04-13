@@ -14,8 +14,8 @@ function take_input() {
             if(cmd === 'exit') {
                 reject('Bye')
             }
-            // TODO Take the host and port as command line input
-            const websocket = new ws('ws://localhost:1337', {})
+            const url = process.argv[2]
+            const websocket = new ws(url)
             websocket.on('message', data => {
                 resolve(data)
             })
@@ -25,6 +25,10 @@ function take_input() {
 }
 
 function main() {
+    if(3 > process.argv.length) {
+        console.log('Usage: ' + process.argv[0] + ' ' + process.argv[1] + ' server_url')
+        process.exit()
+    }
     take_input()
     .then(data => {
         // TODO Change this to an actual logging library to have an audit history
