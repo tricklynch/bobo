@@ -45,4 +45,7 @@ exploit function needs to be something the victim's browser can reference. For
 example, you cannot call a function named "foo" in your exploit because the
 victim's browser does not know function "foo".
 
+The result of the eval is sent back to the server which is then passed along to
+the shell.
+
 [//]: # "TODO Learn Markdown"
