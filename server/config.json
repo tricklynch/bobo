@@ -1,5 +1,6 @@
 {
   "cmd_port": 1337,
   "client_port": 8080,
-  "exploit_port": 8000
+  "exploit_port": 8000,
+  "host": "localhost"
 }
