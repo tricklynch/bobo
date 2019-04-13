@@ -12,8 +12,11 @@ in the near future will give you the ability to get other web pages from the
 application via the admin's browser and taking actions on the admin's behalf.
 
 Bounty hunters can use this to demonstrate real impact in their reports (more $)
+
 Security engineers can find this helpful to find the real impact of an XSS
+
 Pen testers may want to take a medium finding up to a high (or even critical)
+
 Red teamers can drill deeper into the application to get the real gold
 
 [//]: # "TODO Learn Markdown"
