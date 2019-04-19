@@ -128,15 +128,17 @@ function main() {
     // The client then executes whatever exploit gets sent to it
     const CLIENT_PORT = config.client_port || 8080
     http.createServer((req, res) => {
+        const host = config.host || 'localhost'
         const req_path = url.parse(req.url).pathname
         if('/client.js' === req_path) {
-            const host = config.host || 'localhost'
             const server_url = '"ws://' + host + ':' + EXPLOIT_PORT + '"'
             let client_payload = '(' + client + ')()'
             client_payload = client_payload.replace('$$SERVER_URL$$', server_url)
             res.end(client_payload)
         } else {
-            const html_client = fs.readFileSync('./client/index.html')
+            const server_url = '"http://' + host + ':' + CLIENT_PORT + '/client.js"'
+            let html_client = '' + fs.readFileSync('./client/index.html')
+            html_client = html_client.replace('$$SERVER_URL$$', server_url)
             res.end(html_client)
         }
     }).listen(CLIENT_PORT)
